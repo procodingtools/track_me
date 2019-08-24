@@ -215,15 +215,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 
-  @override
-  void dispose() {
-    //disposing the location listener
-    _location.dispose().then((_) {
-      print(_);
-      super.dispose();
-    });
-  }
-
   void _requestLocating() {
     //initializing location if it's null
     if (_location == null) _location = Location();
@@ -304,9 +295,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
         //updating the state to set => app is not locating
         _isTracking = 0;
       });
-      //disposing location listener (library modification)
-      _location.dispose().then((val) {
-      });
 
       //closing file.
       _open.flush();
@@ -359,6 +347,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
     //on location changed
     _location.onLocationChanged().listen((location) {
 
+      if (_isTracking == 2){
       //if old position is recently initialized to null then create the new position the file.
       if (_lat == null) {
         //writing position to the file
@@ -375,6 +364,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
       //storing last position to compare it to the comming one.
       _lat = location.latitude;
       _lng = location.longitude;
+      }
 
     });
   }
